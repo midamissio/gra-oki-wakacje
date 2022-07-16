@@ -1,0 +1,9 @@
+ile pól w prawo i w doł = 8
+ktory level = 1
+liczba kolorow = 4
+min zazneczenia = 4
+max zazneczenia = 12
+ile zaznaczonych pól = 0
+ile_punktów = 0
+najlepszy wynik = 0
+ilosc cekund na plansze = 80
