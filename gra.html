@@ -8,21 +8,32 @@
 		
 		<script>
 			let plansza, rysowanie;
-			ile_pol_w_prawo_i_w_doł = 8
-			ktory_level = 1
-			liczba_kolorow = 4
-			min_zazneczenia = 4
-			max_zazneczenia = 12
-			ile_zaznaczonych pól = 0
-			ile_punktów = 0
-			najlepszy_wynik = 0
-			ilosc_sekund_na_plansze = 80
+			let ile_pol_w_prawo_i_w_doł = 8;
+			let ktory_level = 1;
+			let liczba_kolorow = 4;
+			let min_zaznaczenia = 4;
+			let max_zaznaczenia = 12;
+			let ile_zaznaczonych_pol = 0;
+			let ile_punktów = 0;
+			let najlepszy_wynik = 0;
+			let ilosc_sekund_na_plansze = 80;
 			plansza = document.getElementById("plansza");
 			rysowanie = plansza.getContext("2d");
 			
 			function RysujPlansze() {
 				rysowanie.fillStyle = "rgb(0,0,0)"; 
 				rysowanie.fillRect(0,0, plansza.width,plansza.height); 
+				let kolor = Math.floor((Math.random() * 4));
+				if (kolor == 0)
+					kolor="red";
+				else if(kolor == 1)
+					kolor = "blue";
+				else if(kolor == 2)
+					kolor = "green";
+				else
+					kolor = "yellow";
+				rysowanie.fillStyle = kolor;
+				rysowanie.fillRect(0,0,75,75);
 			}	
 			RysujPlansze();
 		</script>
