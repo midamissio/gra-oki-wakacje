@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<canvas id="plansza" width="600px" height="600px"></canvas>
+		
+		<script>
+			let plansza, rysowanie;
+			ile_pol_w_prawo_i_w_doł = 8
+			ktory_level = 1
+			liczba_kolorow = 4
+			min_zazneczenia = 4
+			max_zazneczenia = 12
+			ile_zaznaczonych pól = 0
+			ile_punktów = 0
+			najlepszy_wynik = 0
+			ilosc_sekund_na_plansze = 80
+			plansza = document.getElementById("plansza");
+			rysowanie = plansza.getContext("2d");
+			
+			function RysujPlansze() {
+				rysowanie.fillStyle = "rgb(0,0,0)"; 
+				rysowanie.fillRect(0,0, plansza.width,plansza.height); 
+			}	
+			RysujPlansze();
+		</script>
+	</body>
+</html>
