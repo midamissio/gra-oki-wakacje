@@ -17,37 +17,102 @@
 			let ile_punktów = 0;
 			let najlepszy_wynik = 0;
 			let ilosc_sekund_na_plansze = 80;
+			let kolory_kwadratow = [];
+			let zaznaczone_kwadraty = [];
 			plansza = document.getElementById("plansza");
 			rysowanie = plansza.getContext("2d");
+			let size = plansza.width / ile_pol_w_prawo_i_w_doł;
+			let grubosc = size / 10;
+			
+			function inicjalizuj_tablice_kolorow() {
+				let kolor;
+				for (j = 0; j < ile_pol_w_prawo_i_w_doł; j++)
+				{
+					kolory_kwadratow[j] =[];
+					for (i = 0; i < ile_pol_w_prawo_i_w_doł; i++)
+					{
+						kolor = Math.floor((Math.random() * 4));
+						if (kolor == 0)
+							kolor="rgb(150, 0, 0)";
+						else if(kolor == 1)
+							kolor = "rgb(0, 0, 150)";
+						else if(kolor == 2)
+							kolor = "rgb(0, 150, 0)";
+						else
+							kolor = "rgb(150, 150, 0)";
+						
+						kolory_kwadratow[j][i] = kolor;
+					}
+					
+				}
+			}
+			function inicjalizuj_tablice_zaznaczen() {
+				for (j = 0; j < ile_pol_w_prawo_i_w_doł; j++)
+				{
+					zaznaczone_kwadraty[j] =[];
+					for (i = 0; i < ile_pol_w_prawo_i_w_doł; i++)
+					{	
+						zaznaczone_kwadraty[j][i] = false;
+					}
+					
+				}
+			}
+			function RysujKwadrat(i, j, kolor, jest_zaznaczony) {
+				let x = i * size;
+				let y = j * size;
+				if (jest_zaznaczony)
+				{
+					rysowanie.fillStyle = "rgb(0,230,0)";
+					rysowanie.fillRect(x, y, size, size);
+					rysowanie.fillStyle = kolor;
+					rysowanie.fillRect(x + grubosc, y + grubosc, size - grubosc * 2, size - grubosc * 2);
+				}
+				else
+				{
+					rysowanie.fillStyle = kolor;
+					rysowanie.fillRect(size * i,j * size,size,size);
+				}
+			}
 			
 			function RysujPlansze() {
 				rysowanie.fillStyle = "rgb(0,0,0)"; 
 				rysowanie.fillRect(0,0, plansza.width,plansza.height); 
 				
-				let kolor;
-				let size = 75;
-				let ile_w_dol = 0;
 				for (j = 0; j < ile_pol_w_prawo_i_w_doł; j++)
 				{
 					for (i = 0; i < ile_pol_w_prawo_i_w_doł; i++)
 					{
-						kolor = Math.floor((Math.random() * 4));
-						if (kolor == 0)
-							kolor="red";
-						else if(kolor == 1)
-							kolor = "blue";
-						else if(kolor == 2)
-							kolor = "green";
-						else
-							kolor = "yellow";
-						
-						rysowanie.fillStyle = kolor;
-						rysowanie.fillRect(size * i,ile_w_dol * size,size * i + size,size);
+						kolor = kolory_kwadratow[j][i];
+						RysujKwadrat(i, j, kolor, false);
 					}
-					ile_w_dol++;
 				}
-			}	
+			}
+			inicjalizuj_tablice_kolorow();
+			inicjalizuj_tablice_zaznaczen();
 			RysujPlansze();
+			
+			function przelacz_kwadrat(canvas, event) {
+				let rect = canvas.getBoundingClientRect();
+				let x = event.clientX - rect.left;
+				let y = event.clientY - rect.top;
+				let mod_x = x % size;
+				let mod_y = y % size;
+				x -= mod_x;
+				y -= mod_y;
+				i = x / size;
+				j = y / size;
+				let kolor = kolory_kwadratow[j][i];
+				jest_zaznaczony = zaznaczone_kwadraty[j][i];
+				RysujKwadrat(i, j, kolor, !jest_zaznaczony);
+				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;
+			}
+    
+			let canvasElem = document.querySelector("canvas");
+			
+			canvasElem.addEventListener("mousedown", function(e)
+			{
+				przelacz_kwadrat(canvasElem, e);
+			});
 		</script>
 	</body>
 </html>
