@@ -7,6 +7,11 @@
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		
 		<script>
+			usun_pola.style.width = '200px';
+			usun_pola.style.height = '50px';
+			usun_pola.style.fontSize = '20px';
+			usun_pola.style.backgroundColor = 'rgb(0,230,0)';
+			
 			let plansza, rysowanie;
 			let ile_pol_w_prawo_i_w_doł = 8;
 			let ktory_level = 1;
@@ -19,6 +24,7 @@
 			let ilosc_sekund_na_plansze = 80;
 			let kolory_kwadratow = [];
 			let zaznaczone_kwadraty = [];
+			let sciezka_zaznaczonych_kwadratow = [];
 			plansza = document.getElementById("plansza");
 			rysowanie = plansza.getContext("2d");
 			let size = plansza.width / ile_pol_w_prawo_i_w_doł;
@@ -33,14 +39,13 @@
 					{
 						kolor = Math.floor((Math.random() * 4));
 						if (kolor == 0)
-							kolor="rgb(150, 0, 0)";
+							kolor="rgb(175, 0, 0)";
 						else if(kolor == 1)
-							kolor = "rgb(0, 0, 150)";
+							kolor = "rgb(0, 0, 175)";
 						else if(kolor == 2)
-							kolor = "rgb(0, 150, 0)";
+							kolor = "rgb(0, 175, 0)";
 						else
-							kolor = "rgb(150, 150, 0)";
-						
+							kolor = "rgb(175, 175, 0)";
 						kolory_kwadratow[j][i] = kolor;
 					}
 					
@@ -62,7 +67,7 @@
 				let y = j * size;
 				if (jest_zaznaczony)
 				{
-					rysowanie.fillStyle = "rgb(0,230,0)";
+					rysowanie.fillStyle = "rgb(0,250,0)";
 					rysowanie.fillRect(x, y, size, size);
 					rysowanie.fillStyle = kolor;
 					rysowanie.fillRect(x + grubosc, y + grubosc, size - grubosc * 2, size - grubosc * 2);
@@ -100,9 +105,23 @@
 				x -= mod_x;
 				y -= mod_y;
 				i = x / size;
-				j = y / size;
+				j = y / size;					
 				let kolor = kolory_kwadratow[j][i];
-				jest_zaznaczony = zaznaczone_kwadraty[j][i];
+				jest_zaznaczony = zaznaczone_kwadraty[j][i];		
+				
+				let ostatni = sciezka_zaznaczonych_kwadratow.pop();	
+				if (ostatni != undefined)
+					sciezka_zaznaczonych_kwadratow.push(ostatni);
+				jest_ostatni = ostatni != undefined && i == ostatni[0] && j == ostatni[1];
+				if(jest_zaznaczony && !jest_ostatni)	
+				{
+					alert("Nie możesz odznaczyć nie ostatniego pola.");
+					return;	
+				}
+				if (jest_zaznaczony)
+					sciezka_zaznaczonych_kwadratow.pop();
+				else
+					sciezka_zaznaczonych_kwadratow.push([i, j]);											
 				RysujKwadrat(i, j, kolor, !jest_zaznaczony);
 				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;
 			}
