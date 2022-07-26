@@ -5,8 +5,14 @@
 	</head>
 	<body>
 		<canvas id="plansza" width="600px" height="600px"></canvas>
-		
+		</br>
+		<button type="button" id="usun_pola" onclick="Usun_pola(i, j)">Usuń zaznaczone pola!</button>
 		<script>
+			usun_pola.style.width = '200px';
+			usun_pola.style.height = '50px';
+			usun_pola.style.fontSize = '20px';
+			usun_pola.style.backgroundColor = 'rgb(0,230,0)'
+      
 			let plansza, rysowanie;
 			let ile_pol_w_prawo_i_w_doł = 8;
 			let ktory_level = 1;
@@ -102,6 +108,10 @@
 				i = x / size;
 				j = y / size;					
 				let kolor = kolory_kwadratow[j][i];
+				let jest_wyzej_od_ostatniego;
+				let jest_nizej_od_ostatniego;
+				let jest_w_prawo_od_ostatniego;
+				let jest_w_lewo_od_ostatniego;
 				jest_zaznaczony = zaznaczone_kwadraty[j][i];		
 				
 				let ostatni = sciezka_zaznaczonych_kwadratow.pop();	
@@ -110,15 +120,36 @@
 				jest_ostatni = ostatni != undefined && i == ostatni[0] && j == ostatni[1];
 				if(jest_zaznaczony && !jest_ostatni)	
 				{
-					alert("Nie możesz odznaczyć nie ostatniego pola.");
+					alert("Nie możesz odznaczyć nie ostatniego pola!");
 					return;	
 				}
+				if(ostatni != undefined && kolory_kwadratow[j][i] != kolory_kwadratow[ostatni[1]][ostatni[0]])
+				{
+					console.log(kolory_kwadratow[j][i] + ' ' + kolory_kwadratow[ostatni[1]][ostatni[0]]);
+					alert("Nie możesz zaznaczać kwadratów o innych kolorach!");
+					return;
+				}
+				jest_wyzej_od_ostatniego = ostatni != undefined && ostatni[1] == j - 1 && i == ostatni[0];
+				jest_nizej_od_ostatniego = ostatni != undefined && ostatni[1] == j + 1 && i == ostatni[0];
+				jest_w_lewo_od_ostatniego = ostatni != undefined && ostatni[0] == i - 1 && j == ostatni[1];
+				jest_w_prawo_od_ostatniego = ostatni != undefined && ostatni[0] == i + 1 && j == ostatni[1];
+				//console.log(jest_wyzej_od_ostatniego + jest_nizej_od_ostatniego + jest_w_lewo_od_ostatniego + jest_w_prawo_od_ostatniego + jest_ostatni);
+				if(ostatni != undefined && !jest_wyzej_od_ostatniego && !jest_nizej_od_ostatniego && !jest_w_lewo_od_ostatniego && !jest_w_prawo_od_ostatniego && !jest_ostatni)
+				{
+					alert("Nie możesz zaznaczać nie sąsiadujących pól!");
+					return;
+				}
+				
 				if (jest_zaznaczony)
 					sciezka_zaznaczonych_kwadratow.pop();
 				else
 					sciezka_zaznaczonych_kwadratow.push([i, j]);											
 				RysujKwadrat(i, j, kolor, !jest_zaznaczony);
-				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;
+				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;				
+			}
+			
+			function Usun_pola(i, j)
+			{
 			}
     
 			let canvasElem = document.querySelector("canvas");
