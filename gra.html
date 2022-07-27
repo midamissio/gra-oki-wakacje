@@ -6,7 +6,7 @@
 	<body>
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		</br>
-		<button type="button" id="usun_pola" onclick="Usun_pola(i, j)">Usuń zaznaczone pola!</button>
+		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button>
 		<script>
 			usun_pola.style.width = '200px';
 			usun_pola.style.height = '50px';
@@ -106,7 +106,9 @@
 				x -= mod_x;
 				y -= mod_y;
 				i = x / size;
-				j = y / size;					
+				j = y / size;	
+				if(kolory_kwadratow[j][i] == "black")
+					return;				
 				let kolor = kolory_kwadratow[j][i];
 				let jest_wyzej_od_ostatniego;
 				let jest_nizej_od_ostatniego;
@@ -148,8 +150,19 @@
 				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;				
 			}
 			
-			function Usun_pola(i, j)
+			function Usun_pola()
 			{
+				let zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+				while(zaznaczony != undefined)
+				{
+					let z = zaznaczony[1];
+					let y = zaznaczony[0];
+					//RysujKwadrat(y, z, "black", true)
+					zaznaczone_kwadraty[z][y] = false;
+					kolory_kwadratow[z][y] = "black";
+					zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+				}
+				RysujPlansze();
 			}
     
 			let canvasElem = document.querySelector("canvas");
