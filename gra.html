@@ -12,7 +12,7 @@
 			usun_pola.style.height = '50px';
 			usun_pola.style.fontSize = '20px';
 			usun_pola.style.backgroundColor = 'rgb(0,230,0)'
-      
+			
 			let plansza, rysowanie;
 			let ile_pol_w_prawo_i_w_doł = 8;
 			let ktory_level = 1;
@@ -152,17 +152,22 @@
 			
 			function Usun_pola()
 			{
-				let zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
-				while(zaznaczony != undefined)
+				if(sciezka_zaznaczonych_kwadratow.length >= 4 && sciezka_zaznaczonych_kwadratow.length <= 12)
 				{
-					let z = zaznaczony[1];
-					let y = zaznaczony[0];
-					//RysujKwadrat(y, z, "black", true)
-					zaznaczone_kwadraty[z][y] = false;
-					kolory_kwadratow[z][y] = "black";
-					zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+					let zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+					while(zaznaczony != undefined)
+					{
+						let z = zaznaczony[1];
+						let y = zaznaczony[0];
+						//RysujKwadrat(y, z, "black", true)
+						zaznaczone_kwadraty[z][y] = false;
+						kolory_kwadratow[z][y] = "black";
+						zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+					}
+					RysujPlansze();
 				}
-				RysujPlansze();
+				else
+					alert("Możesz usunąć tylko od 4 do 12 pól!");
 			}
     
 			let canvasElem = document.querySelector("canvas");
