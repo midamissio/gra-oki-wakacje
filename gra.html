@@ -12,7 +12,7 @@
 			usun_pola.style.height = '50px';
 			usun_pola.style.fontSize = '20px';
 			usun_pola.style.backgroundColor = 'rgb(0,230,0)'
-      
+			
 			let plansza, rysowanie;
 			let ile_pol_w_prawo_i_w_doł = 8;
 			let ktory_level = 1;
@@ -150,19 +150,44 @@
 				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;				
 			}
 			
+			function sleep(ms) {
+			  return new Promise(resolve => setTimeout(resolve, ms));
+			}
+			
+			
+			function Obniz_pola_nad_zaznaczonym(x, y, zaznaczony)
+			{
+				for(i = y; i > 0; i--)
+				{
+					kolory_kwadratow[i][x] = kolory_kwadratow[i - 1][x];
+					//setTimeout(()=> {kolory_kwadratow[i][x] = kolory_kwadratow[i - 1][x]; console.log(i + " " + x);}, t * 1000);
+					//setTimeout(()=> {console.log("czekaj: " + i + " " + x);}, t * 1000);
+				}
+				kolory_kwadratow[0][x] = "black";
+				
+				//while(zaznaczony != undefined)
+				//{
+					//RysujKwadrat(y, z, "black", true)
+					zaznaczone_kwadraty[y][x] = false;
+					//kolory_kwadratow[0][y] = "black";
+					//zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+				//}
+				RysujPlansze();
+			}
 			function Usun_pola()
 			{
-				let zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
-				while(zaznaczony != undefined)
+				if(sciezka_zaznaczonych_kwadratow.length >= 4 && sciezka_zaznaczonych_kwadratow.length <= 12)
 				{
-					let z = zaznaczony[1];
-					let y = zaznaczony[0];
-					//RysujKwadrat(y, z, "black", true)
-					zaznaczone_kwadraty[z][y] = false;
-					kolory_kwadratow[z][y] = "black";
-					zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+					while(sciezka_zaznaczonych_kwadratow.length != 0)
+					{
+						let zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+						let z = zaznaczony[1];
+						let y = zaznaczony[0];
+						Obniz_pola_nad_zaznaczonym(y, z, zaznaczony);
+					}
 				}
-				RysujPlansze();
+				else
+					alert("Możesz usunąć tylko od 4 do 12 pól!");
 			}
     
 			let canvasElem = document.querySelector("canvas");
