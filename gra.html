@@ -79,6 +79,28 @@
 					rysowanie.fillRect(size * i,j * size,size,size);
 				}
 			}
+
+			function RysujKwadratPrzesuniety(i, j, kolor, jest_zaznaczony, przesuniecie) {
+				let x = i * size;
+				let y = j * size;
+				if (jest_zaznaczony)
+				{
+					rysowanie.fillStyle = "rgb(0,250,0)";
+					rysowanie.fillRect(x, y + przesuniecie, size, size);
+					rysowanie.fillStyle = kolor;
+					rysowanie.fillRect(x + grubosc, y + grubosc, size - grubosc * 2, size - grubosc * 2);
+				}
+				else
+				{					
+					if (przesuniecie > 0 && j == 0)
+					{
+						rysowanie.fillStyle = "black";
+						rysowanie.fillRect(size * i,j * size,size,przesuniecie);
+					}
+					rysowanie.fillStyle = kolor;
+					rysowanie.fillRect(size * i,j * size + przesuniecie,size,size);
+				}
+			}
 			
 			function RysujPlansze() {
 				rysowanie.fillStyle = "rgb(0,0,0)"; 
@@ -93,20 +115,8 @@
 					}
 				}
 			}
-			inicjalizuj_tablice_kolorow();
-			inicjalizuj_tablice_zaznaczen();
-			RysujPlansze();
 			
-			function przelacz_kwadrat(canvas, event) {
-				let rect = canvas.getBoundingClientRect();
-				let x = event.clientX - rect.left;
-				let y = event.clientY - rect.top;
-				let mod_x = x % size;
-				let mod_y = y % size;
-				x -= mod_x;
-				y -= mod_y;
-				i = x / size;
-				j = y / size;	
+			function przelacz_kwadrat(i, j) {
 				if(kolory_kwadratow[j][i] == "black")
 					return;				
 				let kolor = kolory_kwadratow[j][i];
@@ -126,7 +136,8 @@
 					return;	
 				}
 				if(ostatni != undefined && kolory_kwadratow[j][i] != kolory_kwadratow[ostatni[1]][ostatni[0]])
-				{
+				{				
+					console.log(j + " " + i);
 					console.log(kolory_kwadratow[j][i] + ' ' + kolory_kwadratow[ostatni[1]][ostatni[0]]);
 					alert("Nie możesz zaznaczać kwadratów o innych kolorach!");
 					return;
@@ -149,38 +160,76 @@
 				RysujKwadrat(i, j, kolor, !jest_zaznaczony);
 				zaznaczone_kwadraty[j][i] = !jest_zaznaczony;				
 			}
+
+			
+			function przelacz_kwadrat_mysza(canvas, event) {
+				let rect = canvas.getBoundingClientRect();
+				let x = event.clientX - rect.left;
+				let y = event.clientY - rect.top;
+				let mod_x = x % size;
+				let mod_y = y % size;
+				x -= mod_x;
+				y -= mod_y;
+				i = x / size;
+				j = y / size;	
+				przelacz_kwadrat(i, j);
+			}
 			
 			function sleep(ms) {
 			  return new Promise(resolve => setTimeout(resolve, ms));
 			}
 			
+			function przesun(i, x, procent)
+			{
+				RysujKwadrat(i, x, kolor, false);
+			}
 			
+			function zmien_kolor(i, x)
+			{
+				if (i > 0)
+					kolory_kwadratow[i][x] = kolory_kwadratow[i - 1][x];
+				else
+					kolory_kwadratow[i][x] = "black";
+				if (i > 0)
+					for (j = 0; j <= size; j++)
+					{
+						let opoznienie = 10 + j * 10;
+						let przesuniecie = j;
+						setTimeout(function() {RysujKwadratPrzesuniety(x, i - 1, kolory_kwadratow[i][x], false, przesuniecie);}, opoznienie);
+					}
+				console.log(i + " " + x + " " + kolory_kwadratow[i][x]);
+			}
+						
 			function Obniz_pola_nad_zaznaczonym(x, y, zaznaczony)
 			{
-				for(i = y; i > 0; i--)
+				let czas = 0;
+				for(i = y; i >= 0; i--)
 				{
-					kolory_kwadratow[i][x] = kolory_kwadratow[i - 1][x];
-					//setTimeout(()=> {kolory_kwadratow[i][x] = kolory_kwadratow[i - 1][x]; console.log(i + " " + x);}, t * 1000);
-					//setTimeout(()=> {console.log("czekaj: " + i + " " + x);}, t * 1000);
+					let ii = i;
+					czas += 100;
+					let czas_lokalny = czas;
+					setTimeout(function() {zmien_kolor(ii, x);}, czas_lokalny);
 				}
-				kolory_kwadratow[0][x] = "black";
-				
-				//while(zaznaczony != undefined)
-				//{
-					//RysujKwadrat(y, z, "black", true)
-					zaznaczone_kwadraty[y][x] = false;
-					//kolory_kwadratow[0][y] = "black";
-					//zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
-				//}
-				RysujPlansze();
+				//kolory_kwadratow[0][x] = "black";
+				//RysujPlansze();
 			}
 			function Usun_pola()
 			{
 				if(sciezka_zaznaczonych_kwadratow.length >= 4 && sciezka_zaznaczonych_kwadratow.length <= 12)
 				{
-					while(sciezka_zaznaczonych_kwadratow.length != 0)
+					let kwadraty = [];
+					while(sciezka_zaznaczonych_kwadratow.length > 0)
 					{
 						let zaznaczony = sciezka_zaznaczonych_kwadratow.pop();
+						sciezka_zaznaczonych_kwadratow.push(zaznaczony);
+						let z = zaznaczony[1];
+						let y = zaznaczony[0];
+						przelacz_kwadrat(y, z);			
+						kwadraty.push(zaznaczony);						
+					}
+					while(kwadraty.length != 0)
+					{
+						let zaznaczony = kwadraty.pop();
 						let z = zaznaczony[1];
 						let y = zaznaczony[0];
 						Obniz_pola_nad_zaznaczonym(y, z, zaznaczony);
@@ -194,8 +243,13 @@
 			
 			canvasElem.addEventListener("mousedown", function(e)
 			{
-				przelacz_kwadrat(canvasElem, e);
+				przelacz_kwadrat_mysza(canvasElem, e);
 			});
+			
+			inicjalizuj_tablice_kolorow();
+			inicjalizuj_tablice_zaznaczen();
+			RysujPlansze();
+
 		</script>
 	</body>
 </html>
