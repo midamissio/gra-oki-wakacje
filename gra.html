@@ -7,6 +7,10 @@
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		</br>
 		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button>
+		
+		<div id="napis_wynik">
+			Wynik: <strong>0</strong>
+		</div>
 		<script>
 			usun_pola.style.width = '200px';
 			usun_pola.style.height = '50px';
@@ -20,7 +24,7 @@
 			let min_zaznaczenia = 4;
 			let max_zaznaczenia = 12;
 			let ile_zaznaczonych_pol = 0;
-			let ile_punktów = 0;
+			let ile_punktow = 0;
 			let najlepszy_wynik = 0;
 			let ilosc_sekund_na_plansze = 80;
 			let kolory_kwadratow = [];
@@ -127,23 +131,29 @@
 				if(jest_zaznaczony && !jest_ostatni)	
 				{
 					alert("Nie możesz odznaczyć nie ostatniego pola!");
+					ile_punktow -= 5;
+					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 					return;	
 				}
 				if(ostatni != undefined && kolory_kwadratow[i][j] != kolory_kwadratow[ostatni[0]][ostatni[1]])
 				{				
-					console.log(j + " " + i);
-					console.log(kolory_kwadratow[i][j] + ' ' + kolory_kwadratow[ostatni[0]][ostatni[1]]);
+					//console.log(j + " " + i);
+					//console.log(kolory_kwadratow[i][j] + ' ' + kolory_kwadratow[ostatni[0]][ostatni[1]]);
 					alert("Nie możesz zaznaczać kwadratów o innych kolorach!");
+					ile_punktow -= 5;
+					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 					return;
 				}
 				jest_wyzej_od_ostatniego = ostatni != undefined && ostatni[1] == j + 1 && i == ostatni[0];
 				jest_nizej_od_ostatniego = ostatni != undefined && ostatni[1] == j - 1 && i == ostatni[0];
 				jest_w_lewo_od_ostatniego = ostatni != undefined && ostatni[0] == i - 1 && j == ostatni[1];
 				jest_w_prawo_od_ostatniego = ostatni != undefined && ostatni[0] == i + 1 && j == ostatni[1];
-				//console.log(jest_wyzej_od_ostatniego + jest_nizej_od_ostatniego + jest_w_lewo_od_ostatniego + jest_w_prawo_od_ostatniego + jest_ostatni);
+				////console.log(jest_wyzej_od_ostatniego + jest_nizej_od_ostatniego + jest_w_lewo_od_ostatniego + jest_w_prawo_od_ostatniego + jest_ostatni);
 				if(ostatni != undefined && !jest_wyzej_od_ostatniego && !jest_nizej_od_ostatniego && !jest_w_lewo_od_ostatniego && !jest_w_prawo_od_ostatniego && !jest_ostatni)
 				{
 					alert("Nie możesz zaznaczać nie sąsiadujących pól!");
+					ile_punktow -= 5;
+					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 					return;
 				}
 				
@@ -153,7 +163,7 @@
 					sciezka_zaznaczonych_kwadratow.push([i, j]);											
 				RysujKwadrat(i, j, kolor, !jest_zaznaczony);
 				zaznaczone_kwadraty[i][j] = !jest_zaznaczony;				
-				console.log("zaznaczylem: " + i + ":" + j + ":" + zaznaczone_kwadraty[i][j]);
+				//console.log("zaznaczylem: " + i + ":" + j + ":" + zaznaczone_kwadraty[i][j]);
 			}
 
 			
@@ -223,23 +233,29 @@
 							if (!zaznaczone_kwadraty[x][yy])
 								(kwadraty_do_przesuniecia[x][yy])++;
 					}
+					ile_punktow += sciezka_zaznaczonych_kwadratow.length*10;
+					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 					for (c = sciezka_zaznaczonych_kwadratow.length - 1; c >= 0; c--)
 					{
 						let zaznaczony = sciezka_zaznaczonych_kwadratow[c];
 						let x = zaznaczony[0];
 						let y = zaznaczony[1];
-						console.log("do przelaczenia: " + x + ":" + y + ":" + zaznaczone_kwadraty[x][y]);						
+						//console.log("do przelaczenia: " + x + ":" + y + ":" + zaznaczone_kwadraty[x][y]);						
 						przelacz_kwadrat(x, y);
 						kolory_kwadratow[x][y] = "black";
 						RysujPlansze();
 					}
-						console.log("do przesuniecia");
-						console.log(kolory_kwadratow);
-						console.log(kwadraty_do_przesuniecia);
+						//console.log("do przesuniecia");
+						//console.log(kolory_kwadratow);
+						//console.log(kwadraty_do_przesuniecia);
 						Obniz_wszystkie_pola();
 				}
 				else
+				{
 					alert("Możesz usunąć tylko od 4 do 12 pól!");
+					ile_punktow -= 5;
+					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
+				}
 			}
     
 			let canvasElem = document.querySelector("canvas");
