@@ -7,10 +7,13 @@
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		</br>
 		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button>
-		
+		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Usuń zaznaczone pola!</button>
 		<div id="napis_wynik">
 			Wynik: <strong>0</strong>
 		</div>
+		<div id ="napis_koniec_gry">
+		</div>
+		<div id="napis_najlepszy_w">
 		<script>
 			usun_pola.style.width = '200px';
 			usun_pola.style.height = '50px';
@@ -31,6 +34,7 @@
 			let zaznaczone_kwadraty = [];
 			let sciezka_zaznaczonych_kwadratow = [];
 			let kwadraty_do_przesuniecia = [];
+			let czy_gra_skonczona = false;
 			plansza = document.getElementById("plansza");
 			rysowanie = plansza.getContext("2d");
 			let size = plansza.width / ile_pol_w_prawo_i_w_doł;
@@ -39,6 +43,10 @@
 			czas_roznicy_reakcji = 0;
 			poczatkowy_czas_reakcji = 0;
 			
+			function Koniec_gry()
+			{
+				czy_gra_skonczona = true;
+			}
 			function inicjalizuj_tablice_kolorow() {
 				let kolor;
 				for (i = 0; i < ile_pol_w_prawo_i_w_doł; i++)
@@ -257,6 +265,29 @@
 					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 				}
 			}
+			let ile_sek_zostalo = ilosc_sekund_na_plansze;
+			function odejmij_punkt()
+			{
+				if(czy_gra_skonczona == false)
+				{
+					ile_punktow -= 1;
+					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
+					ile_sek_zostalo--;
+					if(ile_sek_zostalo == 0)
+					{
+						document.getElementById("napis_wynik").innerHTML = "<strong>KONIEC GRY<strong>";
+						if(ile_punktow > najlepszy_wynik)
+							najlepszy_wynik = ile_punktow;
+						document.getElementById("napis_najlepszy_w").innerHTML = "Najlepszy_wynik: <strong>" + najlepszy_wynik + "</strong>"; 
+					}
+					else
+					{
+						setTimeout(function() {odejmij_punkt();}, 1000);				
+					}
+				}
+				else
+					return;
+			}
     
 			let canvasElem = document.querySelector("canvas");
 			
@@ -268,7 +299,12 @@
 			inicjalizuj_tablice_kolorow();
 			inicjalizuj_tablice_zaznaczen();
 			RysujPlansze();
-
+			//for(i = 0; i < ilosc_sekund_na_plansze; i++)
+			//{
+			//	setTimeout(function() {odejmij_punkt();}, 1000);
+			//}
+			
+			odejmij_punkt();
 		</script>
 	</body>
 </html>
