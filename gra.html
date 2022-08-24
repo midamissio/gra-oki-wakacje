@@ -7,7 +7,7 @@
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		</br>
 		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button>
-		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Usuń zaznaczone pola!</button>
+		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Zakończ grę!</button>
 		<div id="napis_wynik">
 			Wynik: <strong>0</strong>
 		</div>
@@ -19,6 +19,10 @@
 			usun_pola.style.height = '50px';
 			usun_pola.style.fontSize = '20px';
 			usun_pola.style.backgroundColor = 'rgb(0,230,0)'
+			przy_koniec_gry.style.width = '200px';
+			przy_koniec_gry.style.height = '50px';
+			przy_koniec_gry.style.fontSize = '20px';
+			przy_koniec_gry.style.backgroundColor = 'rgb(0,230,0)';
 			
 			let plansza, rysowanie;
 			let ile_pol_w_prawo_i_w_doł = 8;
@@ -176,16 +180,21 @@
 
 			
 			function przelacz_kwadrat_mysza(canvas, event) {
-				let rect = canvas.getBoundingClientRect();
-				let x = event.clientX - rect.left;
-				let y = event.clientY - rect.top;
-				let mod_x = x % size;
-				let mod_y = y % size;
-				x -= mod_x;
-				y -= mod_y;
-				i = x / size;
-				j = y / size;	
-				przelacz_kwadrat(i, j);
+				if(czy_gra_skonczona == false)
+				{
+					let rect = canvas.getBoundingClientRect();
+					let x = event.clientX - rect.left;
+					let y = event.clientY - rect.top;
+					let mod_x = x % size;
+					let mod_y = y % size;
+					x -= mod_x;
+					y -= mod_y;
+					i = x / size;
+					j = y / size;	
+					przelacz_kwadrat(i, j);
+				}
+				else
+					alert("Nie możesz zaznaczyć/odznaczyć pola po zakończeniu gry!");
 			}
 			
 			function przesun(i, x, procent)
