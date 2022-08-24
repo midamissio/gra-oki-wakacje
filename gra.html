@@ -2,27 +2,46 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<style>
+			.rozmiar
+			{
+				font-size: 25px;
+			}
+		</style>
 	</head>
 	<body>
+	<select class="combo">
+			<option value="Select">Wybierz poziom...</option>
+			<option value="html">Początkujący</option>
+			<option value="css">CSS 3</option>
+	</select>
+
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		</br>
-		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button>
-		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Zakończ grę!</button>
-		<div id="napis_wynik">
+		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button></br>
+		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Zakończ grę!</button></br>
+		<button type="button" id="rozpocznij_gre" onclick="Rozpocznij_gre()">Rozpocznij grę!</button>
+		<div id="napis_wynik" class = "rozmiar">
 			Wynik: <strong>0</strong>
 		</div>
-		<div id ="napis_koniec_gry">
+		<div id ="napis_koniec_gry" class = "rozmiar">
 		</div>
-		<div id="napis_najlepszy_w">
+		<div id="napis_najlepszy_w" class = "rozmiar">
+		</div>
 		<script>
 			usun_pola.style.width = '200px';
-			usun_pola.style.height = '50px';
-			usun_pola.style.fontSize = '20px';
+			usun_pola.style.height = '100px';
+			usun_pola.style.fontSize = '25px';
 			usun_pola.style.backgroundColor = 'rgb(0,230,0)'
 			przy_koniec_gry.style.width = '200px';
 			przy_koniec_gry.style.height = '50px';
-			przy_koniec_gry.style.fontSize = '20px';
+			przy_koniec_gry.style.fontSize = '25px';
 			przy_koniec_gry.style.backgroundColor = 'rgb(0,230,0)';
+			rozpocznij_gre.style.width = '200px';
+			rozpocznij_gre.style.height = '50px';
+			rozpocznij_gre.style.fontSize = '25px';
+			rozpocznij_gre.style.backgroundColor = 'rgb(0,230,0)';
 			
 			let plansza, rysowanie;
 			let ile_pol_w_prawo_i_w_doł = 8;
@@ -50,6 +69,7 @@
 			function Koniec_gry()
 			{
 				czy_gra_skonczona = true;
+				ktory_level++;
 			}
 			function inicjalizuj_tablice_kolorow() {
 				let kolor;
@@ -113,6 +133,8 @@
 			}
 			
 			function RysujPlansze() {
+				if(ktory_level%10 == 0)
+					ile_pol_w_prawo_i_w_doł--;
 				rysowanie.fillStyle = "rgb(0,0,0)"; 
 				rysowanie.fillRect(0,0, plansza.width,plansza.height); 
 				
@@ -282,20 +304,17 @@
 					ile_punktow -= 1;
 					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 					ile_sek_zostalo--;
-					if(ile_sek_zostalo == 0)
-					{
-						document.getElementById("napis_wynik").innerHTML = "<strong>KONIEC GRY<strong>";
-						if(ile_punktow > najlepszy_wynik)
-							najlepszy_wynik = ile_punktow;
-						document.getElementById("napis_najlepszy_w").innerHTML = "Najlepszy_wynik: <strong>" + najlepszy_wynik + "</strong>"; 
-					}
-					else
-					{
-						setTimeout(function() {odejmij_punkt();}, 1000);				
-					}
+					setTimeout(function() {odejmij_punkt();}, 1000);				
 				}
 				else
+				{
+					document.getElementById("napis_wynik").innerHTML = "<strong>KONIEC GRY<strong>";
+					if(ile_punktow > najlepszy_wynik)
+						najlepszy_wynik = ile_punktow;
+					document.getElementById("napis_najlepszy_w").innerHTML = "Najlepszy_wynik: <strong>" + najlepszy_wynik + "</strong>"; 
+					
 					return;
+				}
 			}
     
 			let canvasElem = document.querySelector("canvas");
@@ -305,14 +324,24 @@
 				przelacz_kwadrat_mysza(canvasElem, e);
 			});
 			
-			inicjalizuj_tablice_kolorow();
-			inicjalizuj_tablice_zaznaczen();
-			RysujPlansze();
+			//function Rozpocznij_gre()
+			//{
+			//	ile_punktow = 0;
+			//	inicjalizuj_tablice_kolorow();
+			//	inicjalizuj_tablice_zaznaczen();
+			//	RysujPlansze();
+			//	odejmij_punkt();
+			//}
+			
 			//for(i = 0; i < ilosc_sekund_na_plansze; i++)
 			//{
 			//	setTimeout(function() {odejmij_punkt();}, 1000);
 			//}
 			
+			ile_punktow = 0;
+			inicjalizuj_tablice_kolorow();
+			inicjalizuj_tablice_zaznaczen();
+			RysujPlansze();
 			odejmij_punkt();
 		</script>
 	</body>
