@@ -11,14 +11,22 @@
 		</style>
 	</head>
 	<body>
-	<select class="combo">
-			<option value="Select">Wybierz poziom...</option>
-			<option value="html">Początkujący</option>
-			<option value="css">CSS 3</option>
-	</select>
-
+		<h2>
+			Zasady: </br>
+			Można usuwać od 4 do 12 kwadratow, </br>
+			nie można zaznaczać nie sąsiednich lub nie pasujących pól. </br>
+			Ostrzeżenie!: </br>
+			Zanim zacznie się nową grę należy nacisnąć przycisk "Zakończ grę!" w przeciwnym razie punkty będą sie szybciej odejmowały.
+		</h2> 
 		<canvas id="plansza" width="600px" height="600px"></canvas>
 		</br>
+		<select id="poziom" class="combo">
+			<option value="Select">Wybierz poziom...</option>
+			<option value="latwy">Łatwy</option>
+			<option value="sredni">Średni</option>
+			<option value="trudny">Trudny</option>
+			<option value="bar_trudny">Bardzo trudny</option>
+		</select></br>
 		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button></br>
 		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Zakończ grę!</button></br>
 		<button type="button" id="rozpocznij_gre" onclick="Rozpocznij_gre()">Rozpocznij grę!</button>
@@ -42,26 +50,29 @@
 			rozpocznij_gre.style.height = '50px';
 			rozpocznij_gre.style.fontSize = '25px';
 			rozpocznij_gre.style.backgroundColor = 'rgb(0,230,0)';
+			poziom.style.width = '200px';
+			poziom.style.height = '50px';
+			poziom.style.fontSize = '25px'
 			
 			let plansza, rysowanie;
-			let ile_pol_w_prawo_i_w_doł = 8;
-			let ktory_level = 1;
 			let liczba_kolorow = 4;
 			let min_zaznaczenia = 4;
 			let max_zaznaczenia = 12;
 			let ile_zaznaczonych_pol = 0;
 			let ile_punktow = 0;
 			let najlepszy_wynik = 0;
-			let ilosc_sekund_na_plansze = 80;
 			let kolory_kwadratow = [];
 			let zaznaczone_kwadraty = [];
 			let sciezka_zaznaczonych_kwadratow = [];
 			let kwadraty_do_przesuniecia = [];
 			let czy_gra_skonczona = false;
+			let ile_pol_w_prawo_i_w_doł;
+			let ilosc_sekund_na_plansze;
+			let size;
+			let grubosc;
+			let ile_sek_zostalo;
 			plansza = document.getElementById("plansza");
 			rysowanie = plansza.getContext("2d");
-			let size = plansza.width / ile_pol_w_prawo_i_w_doł;
-			let grubosc = size / 10;
 			opoznienie_opadania = 3;
 			czas_roznicy_reakcji = 0;
 			poczatkowy_czas_reakcji = 0;
@@ -69,7 +80,6 @@
 			function Koniec_gry()
 			{
 				czy_gra_skonczona = true;
-				ktory_level++;
 			}
 			function inicjalizuj_tablice_kolorow() {
 				let kolor;
@@ -123,9 +133,11 @@
 			}
 
 			function RysujKwadratPrzesuniety(i, j, kolor, jest_zaznaczony, przesuniecie) {
+				let xsize = Math.floor(size);
 				let x = i * size;
 				let y = j * size;
-				let xgrubosc = przesuniecie % size == 0 ? 0 : grubosc;
+				//let xgrubosc = przesuniecie % xsize == 0 ? 0 : grubosc;
+				let xgrubosc = Math.abs(przesuniecie % xsize) <= 0 ? 0 : grubosc;
 				rysowanie.fillStyle = "black";
 				rysowanie.fillRect(x, y + przesuniecie,size,size);
 				rysowanie.fillStyle = kolor;
@@ -133,8 +145,6 @@
 			}
 			
 			function RysujPlansze() {
-				if(ktory_level%10 == 0)
-					ile_pol_w_prawo_i_w_doł--;
 				rysowanie.fillStyle = "rgb(0,0,0)"; 
 				rysowanie.fillRect(0,0, plansza.width,plansza.height); 
 				
@@ -228,10 +238,11 @@
 			{
 				if (ile == 0)
 					return;
+				let xsize = Math.floor(size);
 				let kolor = kolory_kwadratow[x][y];
 				kolory_kwadratow[x][y + ile] = kolory_kwadratow[x][y];
 				kolory_kwadratow[x][y] = "black";
-				for (yy = 0; yy <= size * ile; yy++)
+				for (yy = 0; yy <= xsize * ile; yy++)
 				{
 					let opoznienie = (yy + 1) * opoznienie_opadania;
 					let przesuniecie = yy;
@@ -296,10 +307,9 @@
 					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
 				}
 			}
-			let ile_sek_zostalo = ilosc_sekund_na_plansze;
 			function odejmij_punkt()
 			{
-				if(czy_gra_skonczona == false)
+				if(czy_gra_skonczona == false && ile_sek_zostalo != 0)
 				{
 					ile_punktow -= 1;
 					document.getElementById("napis_wynik").innerHTML = "Wynik: <strong>" + ile_punktow + "</strong>";
@@ -324,25 +334,53 @@
 				przelacz_kwadrat_mysza(canvasElem, e);
 			});
 			
-			//function Rozpocznij_gre()
-			//{
-			//	ile_punktow = 0;
-			//	inicjalizuj_tablice_kolorow();
-			//	inicjalizuj_tablice_zaznaczen();
-			//	RysujPlansze();
-			//	odejmij_punkt();
-			//}
+			function Rozpocznij_gre()
+			{
+				//var level = document.getElementById("poziom").value;
+				czy_gra_skonczona=true;
+				czy_gra_skonczona=false;
+				if(document.getElementById("poziom").value == "latwy")
+				{
+					ile_pol_w_prawo_i_w_doł = 8;
+					ilosc_sekund_na_plansze = 80;
+				}
+				if(document.getElementById("poziom").value == "sredni")
+				{
+					ile_pol_w_prawo_i_w_doł = 8;
+					ilosc_sekund_na_plansze = 70;
+				}
+				if(document.getElementById("poziom").value == "bar_trudny")
+				{
+					ile_pol_w_prawo_i_w_doł = 7;
+					ilosc_sekund_na_plansze = 70;
+				}
+				if(document.getElementById("poziom").value == "trudny")
+				{
+					ile_pol_w_prawo_i_w_doł = 7;
+					ilosc_sekund_na_plansze = 80;
+				}
+				size = plansza.width / ile_pol_w_prawo_i_w_doł;
+				console.log("size=" + size);
+				grubosc = size / 10;
+				
+				ile_sek_zostalo = ilosc_sekund_na_plansze;
+				ile_punktow = 0;
+				inicjalizuj_tablice_kolorow();
+				inicjalizuj_tablice_zaznaczen();
+				RysujPlansze();
+				odejmij_punkt();
+			}
 			
 			//for(i = 0; i < ilosc_sekund_na_plansze; i++)
 			//{
 			//	setTimeout(function() {odejmij_punkt();}, 1000);
 			//}
 			
-			ile_punktow = 0;
-			inicjalizuj_tablice_kolorow();
-			inicjalizuj_tablice_zaznaczen();
-			RysujPlansze();
-			odejmij_punkt();
+			//ile_punktow = 0;
+			//inicjalizuj_tablice_kolorow();
+			//inicjalizuj_tablice_zaznaczen();
+			//RysujPlansze();
+			//odejmij_punkt();
 		</script>
 	</body>
 </html>
