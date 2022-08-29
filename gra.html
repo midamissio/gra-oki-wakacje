@@ -20,7 +20,7 @@
 		</h2>
 		<h4>Poziomy trudności raz mogą być w dobrej kolejności a czasami w złej. Np. Poziom bardzo trudny może być łatwiejszy od łatwy.*</h4>
 		<p>* Wszystko zależy od szczęścia</p>
-		<canvas id="plansza" width="600px" height="600px"></canvas>
+		<canvas id="plansza" width="580px" height="580px"></canvas>
 		</br>
 		<select id="poziom" class="combo">
 			<option value="Select">Wybierz poziom...</option>
@@ -91,7 +91,7 @@
 					kwadraty_do_przesuniecia[i] = [];
 					for (j = 0; j < ile_pol_w_prawo_i_w_doł; j++)
 					{
-						kolor = Math.floor((Math.random() * 4));
+						kolor = Math.floor((Math.random() * liczba_kolorow));
 						if (kolor == 0)
 							kolor="rgb(175, 0, 0)";
 						else if(kolor == 1)
@@ -142,7 +142,7 @@
 				//let xgrubosc = przesuniecie % xsize == 0 ? 0 : grubosc;
 				let xgrubosc = Math.abs(przesuniecie % xsize) <= 0 ? 0 : grubosc;
 				rysowanie.fillStyle = "black";
-				rysowanie.fillRect(x, y + przesuniecie,size,size);
+				rysowanie.fillRect(x, y + przesuniecie - 1,size,size + 1);
 				rysowanie.fillStyle = kolor;
 				rysowanie.fillRect(x + xgrubosc, y + xgrubosc + przesuniecie, size - xgrubosc * 2, size - xgrubosc * 2);
 			}
@@ -345,21 +345,25 @@
 				{
 					ile_pol_w_prawo_i_w_doł = 8;
 					ilosc_sekund_na_plansze = 80;
+					liczba_kolorow = 3;
 				}
 				if(document.getElementById("poziom").value == "sredni")
 				{
 					ile_pol_w_prawo_i_w_doł = 8;
 					ilosc_sekund_na_plansze = 70;
+					liczba_kolorow = 3;
 				}
 				if(document.getElementById("poziom").value == "bar_trudny")
 				{
 					ile_pol_w_prawo_i_w_doł = 7;
 					ilosc_sekund_na_plansze = 50;
+					liczba_kolorow = 5;
 				}
 				if(document.getElementById("poziom").value == "trudny")
 				{
 					ile_pol_w_prawo_i_w_doł = 7;
 					ilosc_sekund_na_plansze = 60;
+					liczba_kolorow = 4;
 				}
 				size = plansza.width / ile_pol_w_prawo_i_w_doł;
 				console.log("size=" + size);
