@@ -11,35 +11,43 @@
 		</style>
 	</head>
 	<body>
-		<img id="logo" width="130" height="130" src="LOGO.png">
-		<h2>
-			Zasady: </br>
-			Można usuwać od 4 do 12 kwadratow, </br>
-			nie można zaznaczać nie sąsiednich lub nie pasujących pól. </br>
-			Ostrzeżenie!: </br>
-			Zanim zacznie się nową grę należy nacisnąć przycisk "Zakończ grę!" w przeciwnym razie punkty będą sie szybciej odejmowały.
-		</h2>
-		<h4>Poziomy trudności raz mogą być w dobrej kolejności a czasami w złej. Np. Poziom bardzo trudny może być łatwiejszy od łatwy.*</h4>
-		<p>* Wszystko zależy od szczęścia</p>
-		<canvas id="plansza" width="580px" height="580px"></canvas>
-		</br>
-		<select id="poziom" class="combo">
-			<option value="Select">Wybierz poziom...</option>
-			<option value="latwy">Łatwy</option>
-			<option value="sredni">Średni</option>
-			<option value="trudny">Trudny</option>
-			<option value="bar_trudny">Bardzo trudny</option>
-		</select></br>
-		<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button></br>
-		<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Zakończ grę!</button></br>
-		<button type="button" id="rozpocznij_gre" onclick="Rozpocznij_gre()">Rozpocznij grę!</button>
-		<div id="napis_wynik" class = "rozmiar">
-			Wynik: <strong>0</strong>
-		</div>
-		<div id ="napis_koniec_gry" class = "rozmiar">
-		</div>
-		<div id="napis_najlepszy_w" class = "rozmiar">
-		</div>
+		<table cellspacing="0">
+			<tbody>
+				<tr> 
+					<th><img id="logo" width="130" height="130" src="LOGO.png"></th>
+				<tr>
+					<th><canvas id="plansza" width="580px" height="580px"></canvas></th>
+					<td style="padding-left: 30px;" width="700">
+						<h2>
+							Zasady: </br>
+							Można usuwać od 4 do 12 kwadratow, </br>
+							nie można zaznaczać nie sąsiednich lub nie pasujących pól. </br>
+							Ostrzeżenie!: </br>
+							Zanim zacznie się nową grę należy nacisnąć przycisk "Zakończ grę!" w przeciwnym razie punkty będą sie szybciej odejmowały.
+						</h2>
+						<h4>Poziomy trudności raz mogą być w dobrej kolejności a czasami w złej. Np. Poziom bardzo trudny może być łatwiejszy od łatwy.*</h4>
+						<p>* Wszystko zależy od szczęścia</p>
+						</br>
+						<select id="poziom" class="combo">
+							<option value="Select">Wybierz poziom...</option>
+							<option value="latwy">Łatwy</option>
+							<option value="sredni">Średni</option>
+							<option value="trudny">Trudny</option>
+							<option value="bar_trudny">Bardzo trudny</option>
+						</select>
+						</br>
+						<button type="button" id="usun_pola" onclick="Usun_pola()">Usuń zaznaczone pola!</button></br>
+						<button type="button" id="przy_koniec_gry" onclick="Koniec_gry()">Zakończ grę!</button></br>
+						<button type="button" id="rozpocznij_gre" onclick="Rozpocznij_gre()">Rozpocznij grę!</button>
+						<div id="napis_wynik" class = "rozmiar">
+							Wynik: <strong>0</strong>
+						</div>
+						<div id ="napis_koniec_gry" class = "rozmiar" />
+						<div id="napis_najlepszy_w" class = "rozmiar" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
 		<script>
 			usun_pola.style.width = '200px';
 			usun_pola.style.height = '100px';
