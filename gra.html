@@ -98,8 +98,12 @@
 							kolor = "rgb(0, 0, 175)";
 						else if(kolor == 2)
 							kolor = "rgb(0, 175, 0)";
-						else
+						else if(kolor == 3)
 							kolor = "rgb(175, 175, 0)";
+						else if(kolor == 4)
+							kolor = "rgb(0, 175, 175)";
+						else
+							kolor = "rgb(219, 154, 165)";
 						kolory_kwadratow[i][j] = kolor;
 						kwadraty_do_przesuniecia[i][j] = 0;
 					}					
@@ -357,13 +361,13 @@
 				{
 					ile_pol_w_prawo_i_w_doł = 9;
 					ilosc_sekund_na_plansze = 50;
-					liczba_kolorow = 5;
+					liczba_kolorow = 6;
 				}
 				if(document.getElementById("poziom").value == "trudny")
 				{
 					ile_pol_w_prawo_i_w_doł = 9;
 					ilosc_sekund_na_plansze = 60;
-					liczba_kolorow = 4;
+					liczba_kolorow = 5;
 				}
 				size = plansza.width / ile_pol_w_prawo_i_w_doł;
 				console.log("size=" + size);
